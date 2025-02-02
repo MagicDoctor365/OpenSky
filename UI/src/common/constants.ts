@@ -1,0 +1,1 @@
+export const TokenFactoryAddress = process.env.NEXT_PUBLIC_TOKENFACTORY_ADDRESS;
