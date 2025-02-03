@@ -1,4 +1,4 @@
-export const address = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
+export const address = "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6";
 
 export const abi = [
   {
@@ -307,40 +307,6 @@ export const abi = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "_operator",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_seller",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_tokenId",
-        type: "uint256",
-      },
-      {
-        internalType: "bytes",
-        name: "_data",
-        type: "bytes",
-      },
-    ],
-    name: "onERC721Received",
-    outputs: [
-      {
-        internalType: "bytes4",
-        name: "",
-        type: "bytes4",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "uint256",
         name: "",
         type: "uint256",
@@ -399,25 +365,24 @@ export const abi = [
   {
     inputs: [
       {
-        internalType: "bytes",
-        name: "_bytes",
-        type: "bytes",
+        internalType: "address",
+        name: "_seller",
+        type: "address",
       },
       {
         internalType: "uint256",
-        name: "_start",
+        name: "_tokenId",
         type: "uint256",
       },
-    ],
-    name: "toUint256",
-    outputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "_price",
         type: "uint256",
       },
     ],
-    stateMutability: "pure",
+    name: "placeOrder",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
 ];

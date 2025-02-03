@@ -9,7 +9,7 @@ export default function Header() {
   const pathname = usePathname();
 
   const links = [
-    { href: "/marketNft", label: "Market" },
+    { href: "/market", label: "Market" },
     { href: "/mintNft", label: "Mint NFT" },
     { href: "/myNft", label: "My NFT" },
   ];

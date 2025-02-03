@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Card, Form, Input, Button, Space, Upload, Result } from "antd";
+import { useContext, useState } from "react";
+import { Card, Form, Input, Button, Space, Upload } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
 import axios from "axios";
@@ -10,13 +10,15 @@ import {
   address as contractAddress,
   abi as contractAbi,
 } from "@/contract/myNFT";
+import { Context } from "@/components/WrapApp";
 
 export default () => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [showNullImageError, setShowNullImageError] = useState(false);
   const { writeContractAsync } = useWriteContract();
   const { address: curAccount } = useAccount();
-  const [showResult, setShowResult] = useState(false);
+
+  const { notificationApi } = useContext(Context);
 
   const onFinish = async (values: any) => {
     if (imageUrl == null) {
@@ -40,11 +42,17 @@ export default () => {
         args: [curAccount, "http://127.0.0.1:8080/ipfs/" + cid],
       });
       console.log(result);
-      setShowResult(true);
+      if (result) {
+        notificationApi?.success({
+          message: "Mint Success",
+          description: "Congratulations! You mint the NFT successfully.",
+          duration: 10,
+        });
+      }
     }
   };
 
-  const renderForm = () => (
+  return (
     <div className="flex justify-center items-center h-screen">
       <Card title="Mint NFT">
         <Form
@@ -133,22 +141,4 @@ export default () => {
       </Card>
     </div>
   );
-
-  const renderResult = () => {
-    return (
-      <Result
-        status="success"
-        title="You mint a NFT successfully."
-        subTitle=""
-        extra={[
-          <Button type="primary" key="console">
-            Go to your NFTs.
-          </Button>,
-          <Button key="buy">Back to Mint</Button>,
-        ]}
-      ></Result>
-    );
-  };
-
-  return showResult ? renderResult() : renderForm();
 };

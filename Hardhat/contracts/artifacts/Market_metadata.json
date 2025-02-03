@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.28+commit.7893614a"
+		"version": "0.8.26+commit.8a97fa7a"
 	},
 	"language": "Solidity",
 	"output": {
@@ -311,40 +311,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "_operator",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_seller",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_tokenId",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bytes",
-						"name": "_data",
-						"type": "bytes"
-					}
-				],
-				"name": "onERC721Received",
-				"outputs": [
-					{
-						"internalType": "bytes4",
-						"name": "",
-						"type": "bytes4"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
@@ -403,41 +369,30 @@
 			{
 				"inputs": [
 					{
-						"internalType": "bytes",
-						"name": "_bytes",
-						"type": "bytes"
+						"internalType": "address",
+						"name": "_seller",
+						"type": "address"
 					},
 					{
 						"internalType": "uint256",
-						"name": "_start",
+						"name": "_tokenId",
 						"type": "uint256"
-					}
-				],
-				"name": "toUint256",
-				"outputs": [
+					},
 					{
 						"internalType": "uint256",
-						"name": "",
+						"name": "_price",
 						"type": "uint256"
 					}
 				],
-				"stateMutability": "pure",
+				"name": "placeOrder",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
 		"devdoc": {
 			"kind": "dev",
-			"methods": {
-				"onERC721Received(address,address,uint256,bytes)": {
-					"details": "List a good using a ERC721 receiver hook",
-					"params": {
-						"_data": "contains the pricing data as the first 32 bytes",
-						"_operator": "the caller of this function",
-						"_seller": "the good seller",
-						"_tokenId": "the good id to list"
-					}
-				}
-			},
+			"methods": {},
 			"title": "NFTMarket contract that allows atomic swaps of ERC20 and ERC721",
 			"version": 1
 		},
@@ -520,11 +475,11 @@
 			]
 		},
 		"contracts/nft-market.sol": {
-			"keccak256": "0x5fa001f8580e6a1856218124f5b47e815e76e7a9dc4efc024ab7adff3b939110",
+			"keccak256": "0x025678f5d990f01ffee735586439a34a1f19d6d845047d6bd57d31b1da8912c2",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://fae1ee5da1e29e7c4251678b19775544936610b60f1f2d452bf83ccca636462d",
-				"dweb:/ipfs/QmX4aaWDkQzS4pawHteJP4EpVDo7DoYctEUMWdr4f8Qd93"
+				"bzz-raw://beda460c29a057b01310728c9883e347571393b35bbee40f2009ab98770ec521",
+				"dweb:/ipfs/QmNZ4GqyQtSJQMfPfnJyHoSfb8zudyzYYoAcqKcxbsPG1P"
 			]
 		}
 	},

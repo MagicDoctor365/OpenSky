@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/interfaces/IERC20.sol";
 /**
  * @title NFTMarket contract that allows atomic swaps of ERC20 and ERC721
  */
-contract Market is IERC721Receiver {
+contract Market {
     IERC20 public erc20;
     IERC721 public erc721;
 
@@ -93,6 +93,24 @@ contract Market is IERC721Receiver {
         emit ChangePrice(seller, _tokenId, previousPrice, _price);
     }
 
+     // place order is a function that is called when a NFT is listed
+    function placeOrder(
+        address _seller,
+        uint256 _tokenId,
+        uint256 _price
+    ) external {
+        require(_price > 0, "Market: Price must be greater than zero");
+
+        orderOfId[_tokenId].seller = _seller;
+        orderOfId[_tokenId].price = _price;
+        orderOfId[_tokenId].tokenId = _tokenId;
+
+        orders.push(orderOfId[_tokenId]);
+        idToOrderIndex[_tokenId] = orders.length - 1;
+
+        emit NewOrder(_seller, _tokenId, _price);
+    }
+
     function getAllNFTs() public view returns (Order[] memory) {
         return orders;
     }
@@ -124,58 +142,6 @@ contract Market is IERC721Receiver {
         return orders.length;
     }
 
-    /**
-     * @dev List a good using a ERC721 receiver hook
-     * @param _operator the caller of this function
-     * @param _seller the good seller
-     * @param _tokenId the good id to list
-     * @param _data contains the pricing data as the first 32 bytes
-     */
-    function onERC721Received(
-        address _operator,
-        address _seller,
-        uint256 _tokenId,
-        bytes calldata _data
-    ) public override returns (bytes4) {
-        require(_operator == _seller, "Market: Seller must be operator");
-        uint256 _price = toUint256(_data, 0);
-        placeOrder(_seller, _tokenId, _price);
-
-        return MAGIC_ON_ERC721_RECEIVED;
-    }
-
-    // https://stackoverflow.com/questions/63252057/how-to-use-bytestouint-function-in-solidity-the-one-with-assembly
-    function toUint256(
-        bytes memory _bytes,
-        uint256 _start
-    ) public pure returns (uint256) {
-        require(_start + 32 >= _start, "Market: toUint256_overflow");
-        require(_bytes.length >= _start + 32, "Market: toUint256_outOfBounds");
-        uint256 tempUint;
-
-        assembly {
-            tempUint := mload(add(add(_bytes, 0x20), _start))
-        }
-
-        return tempUint;
-    }
-
-    function placeOrder(
-        address _seller,
-        uint256 _tokenId,
-        uint256 _price
-    ) internal {
-        require(_price > 0, "Market: Price must be greater than zero");
-
-        orderOfId[_tokenId].seller = _seller;
-        orderOfId[_tokenId].price = _price;
-        orderOfId[_tokenId].tokenId = _tokenId;
-
-        orders.push(orderOfId[_tokenId]);
-        idToOrderIndex[_tokenId] = orders.length - 1;
-
-        emit NewOrder(_seller, _tokenId, _price);
-    }
 
     // why we use idToOrderIndex?
     // because we need to remove the order from the array and replace it with the last order in the array
