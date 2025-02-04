@@ -43,3 +43,4 @@ next-env.d.ts
 public/uploads/*
 
 yarn.lock
+package-lock.json

@@ -1,8 +1,7 @@
 "use client";
 
-import { Context } from "@/components/WrapApp";
 import { Spin, Empty } from "antd";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { useAccount, useWriteContract, usePublicClient } from "wagmi";
 import axios from "axios";
 
@@ -12,16 +11,14 @@ import {
 } from "@/contract/nftMarkt";
 import { address as myNftAddress, abi as myNftAbi } from "@/contract/myNFT";
 import NFTCard, { NFT } from "@/components/NFTCard";
-import { parseEther } from "viem";
 
-export default () => {
+const Market = () => {
   const { address: curAccount } = useAccount();
   const [nfts, setNFTs] = useState<NFT[]>([]);
   const [loading, setLoading] = useState(false);
   const { writeContractAsync } = useWriteContract();
 
   const client = usePublicClient();
-  const { notificationApi } = useContext(Context);
 
   useEffect(() => {
     async function fetchNfts() {
@@ -88,6 +85,7 @@ export default () => {
       <div className="flex flex-wrap justify-start space-x-4 items-center space-y-4 ">
         {nfts.map((nft: NFT) => (
           <NFTCard
+            key={nft.tokenId}
             nft={nft}
             curAccount={curAccount!}
             buyClickHandler={buyClickHandler}
@@ -102,3 +100,5 @@ export default () => {
     </div>
   );
 };
+
+export default Market;
