@@ -13,7 +13,6 @@ import axios from "axios";
 import { Context } from "@/components/WrapApp";
 import NFTCard, { NFT } from "@/components/NFTCard";
 import { useRouter } from "next/navigation";
-import { ZeroAddress } from "ethers";
 
 export default function MyNft() {
   const { address: curAccount } = useAccount();

@@ -13,7 +13,7 @@ import {
 import { Context } from "@/components/WrapApp";
 import { useRouter } from "next/navigation";
 
-export default () => {
+const MintNFT = () => {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState<any[]>([]);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -30,32 +30,39 @@ export default () => {
       setShowNullImageError(true);
       return;
     }
-    const metadata = {
-      ...values,
-      imageUrl: imageUrl,
-    };
-    const { data, status } = await axios.post(
-      "/api/nft/uploadMetadata",
-      metadata
-    );
-    if (status == 200 && data && curAccount) {
-      const { cid } = data;
-      const result = await writeContractAsync({
-        abi: contractAbi,
-        address: contractAddress!,
-        functionName: "safeMint",
-        args: [curAccount, "http://127.0.0.1:8080/ipfs/" + cid],
-      });
-      if (result) {
-        notificationApi?.success({
-          message: "Mint Success",
-          description: "Congratulations! You mint the NFT successfully.",
-          duration: 10,
+    try {
+      setLoading(true);
+      const metadata = {
+        ...values,
+        imageUrl: imageUrl,
+      };
+      const { data, status } = await axios.post(
+        "/api/nft/uploadMetadata",
+        metadata
+      );
+      if (status == 200 && data && curAccount) {
+        const { cid } = data;
+        const result = await writeContractAsync({
+          abi: contractAbi,
+          address: contractAddress!,
+          functionName: "safeMint",
+          args: [curAccount, "http://127.0.0.1:8080/ipfs/" + cid],
         });
+        if (result) {
+          notificationApi?.success({
+            message: "Mint Success",
+            description: "Congratulations! You mint the NFT successfully.",
+            duration: 10,
+          });
 
-        form.resetFields();
-        setFileList([]);
+          form.resetFields();
+          setFileList([]);
+        }
       }
+    } catch (e: any) {
+      console.error(e);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -169,7 +176,10 @@ export default () => {
 
   return (
     <div className="flex justify-center items-center h-full">
-      {loading ? <Spin size="large"></Spin> : renderMintForm()}
+      {renderMintForm()}
+      {loading && <Spin size="large"></Spin>}
     </div>
   );
 };
+
+export default MintNFT;

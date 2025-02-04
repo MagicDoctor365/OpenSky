@@ -5,7 +5,6 @@ import { notification, message } from "antd";
 import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import {
   mainnet,
-  sepolia,
   polygon,
   optimism,
   arbitrum,
