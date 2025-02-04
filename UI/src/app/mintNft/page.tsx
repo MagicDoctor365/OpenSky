@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext, useState } from "react";
-import { Card, Form, Input, Button, Space, Upload } from "antd";
+import { Card, Form, Input, Button, Space, Upload, Spin, Result } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
 import axios from "axios";
@@ -11,12 +11,17 @@ import {
   abi as contractAbi,
 } from "@/contract/myNFT";
 import { Context } from "@/components/WrapApp";
+import { useRouter } from "next/navigation";
 
 export default () => {
+  const [form] = Form.useForm();
+  const [fileList, setFileList] = useState<any[]>([]);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [showNullImageError, setShowNullImageError] = useState(false);
   const { writeContractAsync } = useWriteContract();
   const { address: curAccount } = useAccount();
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const { notificationApi } = useContext(Context);
 
@@ -41,21 +46,24 @@ export default () => {
         functionName: "safeMint",
         args: [curAccount, "http://127.0.0.1:8080/ipfs/" + cid],
       });
-      console.log(result);
       if (result) {
         notificationApi?.success({
           message: "Mint Success",
           description: "Congratulations! You mint the NFT successfully.",
           duration: 10,
         });
+
+        form.resetFields();
+        setFileList([]);
       }
     }
   };
 
-  return (
-    <div className="flex justify-center items-center h-screen">
+  const renderMintForm = () => {
+    return (
       <Card title="Mint NFT">
         <Form
+          form={form}
           name="MintNFt"
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 16 }}
@@ -94,11 +102,13 @@ export default () => {
           </Form.Item>
           <Form.Item label="Image">
             <Upload
+              fileList={fileList}
               listType="picture-card"
               maxCount={1}
               action="/api/nft/uploadImage"
               method="post"
               onChange={({ file }) => {
+                setFileList([file]);
                 setShowNullImageError(false);
                 const cid = file?.response?.cid;
                 if (cid) {
@@ -139,6 +149,27 @@ export default () => {
           </Form.Item>
         </Form>
       </Card>
+    );
+  };
+
+  if (curAccount == null) {
+    return (
+      <Result
+        status="403"
+        title="403"
+        subTitle="Sorry, you are not authorized to access this page. Please connect your wallet first."
+        extra={
+          <Button type="primary" onClick={() => router.push("/market")}>
+            Back Home
+          </Button>
+        }
+      />
+    );
+  }
+
+  return (
+    <div className="flex justify-center items-center h-full">
+      {loading ? <Spin size="large"></Spin> : renderMintForm()}
     </div>
   );
 };

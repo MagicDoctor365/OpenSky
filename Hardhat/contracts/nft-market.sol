@@ -51,7 +51,7 @@ contract Market {
         erc721 = _erc721;
     }
 
-    function buy(uint256 _tokenId) external {
+    function buy(uint256 _tokenId) external  {
         require(isListed(_tokenId), "Market: Token ID is not listed");
 
         address seller = orderOfId[_tokenId].seller;

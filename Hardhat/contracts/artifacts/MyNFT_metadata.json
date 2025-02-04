@@ -135,28 +135,6 @@
 				"type": "error"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "owner",
-						"type": "address"
-					}
-				],
-				"name": "OwnableInvalidOwner",
-				"type": "error"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "account",
-						"type": "address"
-					}
-				],
-				"name": "OwnableUnauthorizedAccount",
-				"type": "error"
-			},
-			{
 				"anonymous": false,
 				"inputs": [
 					{
@@ -236,25 +214,6 @@
 					}
 				],
 				"name": "MetadataUpdate",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "previousOwner",
-						"type": "address"
-					},
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "newOwner",
-						"type": "address"
-					}
-				],
-				"name": "OwnershipTransferred",
 				"type": "event"
 			},
 			{
@@ -376,19 +335,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "owner",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -405,13 +351,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "renounceOwnership",
-				"outputs": [],
-				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -630,19 +569,6 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "newOwner",
-						"type": "address"
-					}
-				],
-				"name": "transferOwnership",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -723,16 +649,6 @@
 					{
 						"details": "An `owner`'s token query was out of bounds for `index`. NOTE: The owner being `address(0)` indicates a global out of bounds index."
 					}
-				],
-				"OwnableInvalidOwner(address)": [
-					{
-						"details": "The owner is not a valid owner account. (eg. `address(0)`)"
-					}
-				],
-				"OwnableUnauthorizedAccount(address)": [
-					{
-						"details": "The caller account is not authorized to perform an operation."
-					}
 				]
 			},
 			"events": {
@@ -769,14 +685,8 @@
 				"name()": {
 					"details": "See {IERC721Metadata-name}."
 				},
-				"owner()": {
-					"details": "Returns the address of the current owner."
-				},
 				"ownerOf(uint256)": {
 					"details": "See {IERC721-ownerOf}."
-				},
-				"renounceOwnership()": {
-					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
 				},
 				"safeTransferFrom(address,address,uint256)": {
 					"details": "See {IERC721-safeTransferFrom}."
@@ -801,9 +711,6 @@
 				},
 				"transferFrom(address,address,uint256)": {
 					"details": "See {IERC721-transferFrom}."
-				},
-				"transferOwnership(address)": {
-					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
 				}
 			},
 			"version": 1
@@ -999,11 +906,11 @@
 			]
 		},
 		"contracts/erc721-nft.sol": {
-			"keccak256": "0x7e1f020aa31c3eedd15aa2423c97e1329fac9e33ab6439c1a9806339a5babfe3",
+			"keccak256": "0x9d7be84cf3d051da4b8b69d063021a00ed9c10115f002fe0e3856d35dc41cf46",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://107e14c9b09e524c9e497404c403df0e4c2ec1a9da1307a0fcbc5343751d4d24",
-				"dweb:/ipfs/QmXkRMcroiJJ4jopUoXoJdxi3aGo5zRRR4KyBKRcyoPm3R"
+				"bzz-raw://b69149def9195d607e275cb76fd0ace75e586ab7fb5e356b5ff730a43f0d3511",
+				"dweb:/ipfs/QmTadihPsZ7mSPpp4m6G7aydCGWn923nx5XGapaxcVc1zm"
 			]
 		}
 	},

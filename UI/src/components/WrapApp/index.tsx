@@ -31,6 +31,26 @@ export const Context = createContext({
   messageApi: null,
 } as ContextValue);
 
+const queryClient = new QueryClient();
+
+const config = getDefaultConfig({
+  appName: "My RainbowKit App",
+  projectId: "YOUR_PROJECT_ID",
+  chains: [
+    mainnet,
+    polygon,
+    optimism,
+    arbitrum,
+    base,
+    zora,
+    hardhat,
+    // ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? [sepolia, anvil] : [])
+  ],
+  ssr: true,
+  // [mainnet.chainId]: [infu],
+  // [sepolia.id]: http('https://eth-sepolia.g.alchemy.com/v2/'),
+});
+
 export default function WrapApp({
   children,
 }: Readonly<{
@@ -39,26 +59,6 @@ export default function WrapApp({
   const [notificationApi, notificationContextHolder] =
     notification.useNotification();
   const [messageApi, messageContextHolder] = message.useMessage();
-
-  const queryClient = new QueryClient();
-
-  const config = getDefaultConfig({
-    appName: "My RainbowKit App",
-    projectId: "YOUR_PROJECT_ID",
-    chains: [
-      mainnet,
-      polygon,
-      optimism,
-      arbitrum,
-      base,
-      zora,
-      hardhat,
-      // ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? [sepolia, anvil] : [])
-    ],
-    ssr: true,
-    // [mainnet.chainId]: [infu],
-    // [sepolia.id]: http('https://eth-sepolia.g.alchemy.com/v2/'),
-  });
 
   return (
     <WagmiProvider config={config}>
@@ -70,7 +70,7 @@ export default function WrapApp({
             <Header />
             {notificationContextHolder}
             {messageContextHolder}
-            {children}
+            <div className="h-screen mt-[64px]">{children}</div>
             <Footer />
           </Context.Provider>
         </RainbowKitProvider>

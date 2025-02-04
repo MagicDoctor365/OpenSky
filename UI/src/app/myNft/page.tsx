@@ -1,6 +1,6 @@
 "use client";
 
-import { Spin, Empty, List, Card, Image, Button } from "antd";
+import { Spin, Empty, List, Result, Button } from "antd";
 import { abi as myNFTAbi, address as myNFTAddress } from "@/contract/myNFT";
 import {
   abi as nftMarketAbi,
@@ -11,20 +11,16 @@ import { useAccount, usePublicClient, useWriteContract } from "wagmi";
 
 import axios from "axios";
 import { Context } from "@/components/WrapApp";
-
-type NFTMetadata = {
-  title: string;
-  desc: string;
-  imageUrl: string;
-  isListed: boolean;
-  tokenId: string;
-};
+import NFTCard, { NFT } from "@/components/NFTCard";
+import { useRouter } from "next/navigation";
+import { ZeroAddress } from "ethers";
 
 export default function MyNft() {
   const { address: curAccount } = useAccount();
-  const [nfts, setNFTs] = useState<NFTMetadata[]>([]);
+  const [nfts, setNFTs] = useState<NFT[]>([]);
   const [loading, setLoading] = useState(false);
   const { writeContractAsync } = useWriteContract();
+  const router = useRouter();
 
   const client = usePublicClient();
   const { notificationApi } = useContext(Context);
@@ -42,14 +38,16 @@ export default function MyNft() {
             args: [curAccount],
           })
         );
-        const newNFTs: Array<NFTMetadata> = [];
+        const newNFTs: Array<NFT> = [];
         for (let i = 0; i < nftCnt; i++) {
-          const tokenId = (await client.readContract({
-            address: myNFTAddress,
-            abi: myNFTAbi,
-            functionName: "tokenOfOwnerByIndex",
-            args: [curAccount, BigInt(i)],
-          })) as string;
+          const tokenId = Number(
+            await client.readContract({
+              address: myNFTAddress,
+              abi: myNFTAbi,
+              functionName: "tokenOfOwnerByIndex",
+              args: [curAccount, BigInt(i)],
+            })
+          );
           const tokenURI = await client.readContract({
             address: myNFTAddress,
             abi: myNFTAbi,
@@ -64,7 +62,19 @@ export default function MyNft() {
               functionName: "isListed",
               args: [tokenId],
             });
-            newNFTs.push({ ...metaData, tokenId, isListed });
+            const [seller, , price] = (await client.readContract({
+              address: nftMarketAddress,
+              abi: nftMarketAbi,
+              functionName: "orderOfId",
+              args: [tokenId],
+            })) as any[];
+            newNFTs.push({
+              ...metaData,
+              tokenId,
+              isListed,
+              seller,
+              price: Number(price),
+            });
           }
         }
         setNFTs(newNFTs);
@@ -75,7 +85,34 @@ export default function MyNft() {
       }
     }
     fetchNfts();
-  }, [client]);
+  }, [client, curAccount]);
+
+  const listBtnClickHandler = async (tokenId: number, price: number) => {
+    const result = await writeContractAsync({
+      abi: nftMarketAbi,
+      address: nftMarketAddress!,
+      functionName: "placeOrder",
+      args: [curAccount, tokenId, price],
+    });
+    if (result) {
+      notificationApi?.success({
+        message: "Listed success",
+        description: `NFT ${tokenId} has listed to the market successfully.`,
+        duration: 10,
+      });
+
+      // update nfts state
+      const newNfts = nfts.map((nft: NFT) => {
+        if (nft.tokenId == tokenId) {
+          nft.isListed = true;
+          nft.seller = curAccount;
+          nft.price = price;
+        }
+        return nft;
+      });
+      setNFTs(newNfts);
+    }
+  };
 
   const renderNfts = () => {
     if (nfts.length == 0) {
@@ -85,58 +122,39 @@ export default function MyNft() {
       <List
         grid={{
           gutter: 16,
-          column: 4,
         }}
         dataSource={nfts}
-        renderItem={({ title, desc, imageUrl, isListed, tokenId }) => (
+        renderItem={(nft: any) => (
           <List.Item>
-            <Card title={title} className="w-[300px]">
-              <Image src={imageUrl} alt={title} width={260} />
-              <p>{desc}</p>
-              {isListed ? (
-                <div>Listed</div>
-              ) : (
-                <Button
-                  type="primary"
-                  onClick={async () => {
-                    const result = await writeContractAsync({
-                      abi: nftMarketAbi,
-                      address: nftMarketAddress!,
-                      functionName: "placeOrder",
-                      args: [curAccount, tokenId, 100],
-                    });
-                    if (result) {
-                      console.log("listed success:", result);
-                      notificationApi?.success({
-                        message: "Listed success",
-                        description: `NFT ${tokenId} has listed to the market successfully.`,
-                        duration: 10,
-                      });
-
-                      // update nfts state
-                      const newNfts = nfts.map((nft: NFTMetadata) => {
-                        if (nft.tokenId == tokenId) {
-                          nft.isListed = true;
-                        }
-                        return nft;
-                      });
-                      setNFTs(newNfts);
-                    }
-                  }}
-                >
-                  List
-                </Button>
-              )}
-            </Card>
+            <NFTCard
+              nft={nft}
+              curAccount={curAccount!}
+              listBtnClickHandler={listBtnClickHandler}
+            />
           </List.Item>
         )}
       />
     );
   };
 
+  if (curAccount == null) {
+    return (
+      <Result
+        status="403"
+        title="403"
+        subTitle="Sorry, you are not authorized to access this page. Please connect your wallet first."
+        extra={
+          <Button type="primary" onClick={() => router.push("/market")}>
+            Back Home
+          </Button>
+        }
+      />
+    );
+  }
+
   return (
-    <div className="flex flex-col items-center justify-center h-screen mt-[64px]">
-      {loading ? <Spin tip="Loading" size="large"></Spin> : renderNfts()}
+    <div className="flex flex-col items-center justify-center h-full">
+      {loading ? <Spin size="large"></Spin> : renderNfts()}
     </div>
   );
 }

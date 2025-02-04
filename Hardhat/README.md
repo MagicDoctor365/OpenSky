@@ -23,6 +23,8 @@ npx hardhat node
 ```shell
 npm install -g @remix-project/remixd
 remixd -s . --remix-ide https://remix.ethereum.org
+open remix in browser, then click "connect to local file system"
+remember: switch your environment to "Dev - Hardhat provider" while deploying
 ```
 
 ## IPFS
@@ -31,7 +33,7 @@ remixd -s . --remix-ide https://remix.ethereum.org
 ipfs daemon
 ```
 
-### Hardhat inner accounts:
+### Hardhat default 20 accounts:
 
 Account #0: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 (10000 ETH)
 Private Key: 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
