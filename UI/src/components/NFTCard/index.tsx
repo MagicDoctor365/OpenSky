@@ -49,7 +49,12 @@ const NFTCard = ({
           <InputNumber
             addonBefore={
               <div className="w-[20px] h-[20px]">
-                <NextImage src="/ETH.png" width={20} height={20} />
+                <NextImage
+                  src="/ETH.png"
+                  width={20}
+                  height={20}
+                  alt="ETH logo"
+                />
               </div>
             }
             addonAfter="ETH"
