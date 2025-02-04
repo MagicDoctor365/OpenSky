@@ -81,7 +81,7 @@ const NFTCard = ({
 
   const renderBrief = () => {
     if (!isListed) return null;
-    const items = [
+    const items: any[] = [
       {
         label: "Token Id",
         children: tokenId,
@@ -100,7 +100,7 @@ const NFTCard = ({
   };
 
   const renderDetailModal = () => {
-    const items = [
+    const items: any[] = [
       {
         label: "Title",
         children: title,
