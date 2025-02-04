@@ -1,9 +1,3 @@
-// import { ConnectButton } from "@rainbow-me/rainbowkit";
-
 export default function Home() {
-  return (
-    <div>
-      Home
-    </div>
-  );
+  return <div>Home</div>;
 }
